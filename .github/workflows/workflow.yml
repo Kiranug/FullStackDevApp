@@ -35,13 +35,16 @@ jobs:
           terraform_version: 1.5.0
 
       - name: Terraform Init
-        run: terraform init
-
+        run: terraform init -backend-config="storage_account_name=tfstateglobalkiru" \
+                            -backend-config="container_name=tfstatedatadev" \
+                            -backend-config="key=terraform.tfstate" \
+                            -backend-config="resource_group_name=tfstate-rg"
+  
       - name: Terraform Validate
         run: terraform validate
-
+  
       - name: Terraform Plan
         run: terraform plan -var-file="terraform.tfvars"
-
+  
       - name: Terraform Apply
         run: terraform apply -auto-approve -var-file="terraform.tfvars"
