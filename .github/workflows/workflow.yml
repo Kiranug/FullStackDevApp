@@ -1,41 +1,46 @@
-name: Deploy to Azure with Terraform
+name: Terraform Deployment on Azure
 
 on:
   push:
     branches:
-      - main
-
-permissions:
-  id-token: write
-  contents: read
+      - main  # Trigger the workflow when changes are pushed to the 'main' branch
 
 jobs:
   terraform:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
 
     steps:
+      # Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Azure login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          auth-type: SERVICE_PRINCIPAL
-
+      # Set up Terraform
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.5.0
+          terraform_version: 1.5.0  # Specify the Terraform version
 
+      # Log in to Azure using the Service Principal credentials
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # Initialize Terraform
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform plan
+      # Validate Terraform configuration
+      - name: Terraform Validate
+        run: terraform validate
+
+      # Plan Terraform deployment
+      - name: Terraform Plan
         run: terraform plan -var-file="terraform.tfvars"
-  
-      - name: Terraform apply
+
+      # Apply Terraform deployment
+      - name: Terraform Apply
         run: terraform apply -auto-approve -var-file="terraform.tfvars"
