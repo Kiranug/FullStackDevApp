@@ -49,6 +49,9 @@ jobs:
   
       - name: Terraform Plan
         run: terraform plan -var-file="terraform.tfvars"
-  
+        
+      - name: Register Microsoft.ContainerService
+        run: az provider register --namespace Microsoft.ContainerService
+
       - name: Terraform Apply
         run: terraform apply -auto-approve -var-file="terraform.tfvars"
