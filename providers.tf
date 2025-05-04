@@ -14,11 +14,5 @@ terraform {
 }
 
 provider "azurerm" {
-  features {
-    kubernetes_cluster {}
-    virtual_network {}
-    network_interface {}
-    storage_account {}
-    resource_group {}
-  }
+  features {}
 }
