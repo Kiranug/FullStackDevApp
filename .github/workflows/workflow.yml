@@ -29,10 +29,14 @@ jobs:
       - name: Display Azure Subscription Info (Optional)
         run: az account show
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.0
+        
+      - name: Register Azure Providers
+        run: |
+          az provider register --namespace Microsoft.ContainerService
+          az provider register --namespace Microsoft.Network
+          az provider register --namespace Microsoft.Compute
+          az provider register --namespace Microsoft.Storage
+
           
       - name: Set Terraform environment variables for backend authentication
         run: |
