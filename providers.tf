@@ -6,7 +6,7 @@ terraform {
     }
     random = {
       source  = "hashicorp/random"
-      version = "~>3.0"
+      version = "~> 3.0"
     }
   }
 
@@ -14,5 +14,11 @@ terraform {
 }
 
 provider "azurerm" {
-  features {}
+  features {
+    kubernetes_cluster {}
+    virtual_network {}
+    network_interface {}
+    storage_account {}
+    resource_group {}
+  }
 }
